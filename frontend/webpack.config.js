@@ -8,8 +8,7 @@ var config = {
 
 	output: {
 		filename: "bundle.js",
-		path: __dirname + "/dist",
-		publicPath: "/dist/"
+		path: __dirname
 	},
 
 	module : {
