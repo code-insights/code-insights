@@ -21,6 +21,10 @@ var config = {
 		]
 	},
 
+	resolve: {
+		extensions: [".jsx", ".js"]
+	},
+
 	devServer: {
 		port: 3000,
 		historyApiFallback: {
