@@ -19,13 +19,13 @@ export default class Setup extends React.Component {
 			url: this.state.url
 		};
 
-		fetch("http://192.168.1.222:8001/submit", 
+		fetch("http://127.0.0.1:8080/repository-processor", 
 		{
 			method: "POST",
 			body: JSON.stringify(payload)
 		})
 		.then(function(res) {return res.json(); })
-		.then(function(data) { console.log(data); window.location.reload()});
+		.then(function(data) { console.log(data.data); });
 	};
 
 	render () {

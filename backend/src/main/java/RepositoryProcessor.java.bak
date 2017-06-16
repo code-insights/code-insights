@@ -1,0 +1,97 @@
+package com.sap.codeinsights;
+ 
+import java.io.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.api.LogCommand;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.lib.PersonIdent;
+
+import com.sap.codeinsights.Coder;
+
+import org.apache.commons.io.FileUtils;
+
+public class RepositoryProcessor extends HttpServlet {
+
+	//TODO if file exists it don't clone it obvi
+	private Git cloneRepo(String url) {
+		try { 
+			File file = new File(System.getProperty("user.home") + "/code-insights/" + Math.abs((long) url.hashCode()));
+
+			Git result = Git.cloneRepository()
+					.setURI(url)
+					.setDirectory(file)
+					.call();
+			return result;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	//returns anyone who ever committed anything to the repoistory
+	private ArrayList<Coder> getCoders(Git repo) {
+		ArrayList<Coder> coders = new ArrayList<Coder>();
+		try {
+			
+			Iterable<RevCommit> commits = repo.log().all().call();
+			for (RevCommit rc : commits) {
+				 Coder coder = new Coder(rc.getAuthorIdent());
+				if (!coders.contains(coder)) {
+					coders.add(coder);
+				}
+			}
+			return coders;
+		} catch (Exception e) {
+			//TODO don't suck here
+			return null;
+		}
+	}
+
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		System.out.println("Cross Origin set");
+
+		PrintWriter out = response.getWriter();
+		ArrayList<String> people = new ArrayList<String>();
+
+		Git repo = null;
+		try {
+			System.out.println("Cloning repo");
+			repo = cloneRepo(request.getParameter("url"));
+			System.out.println("Repo cloned");
+			System.out.println("Getting all contributors");
+			ArrayList<Coder> coders = getCoders(repo);
+			System.out.println("Got all contributors");
+			
+			File repoDir = repo.getRepository().getDirectory().getParentFile();
+
+			List<File> files = (List<File>) FileUtils.listFiles(repoDir, new String[] {"java"} , true);
+			
+			System.out.println("going through files");
+			int i = 0;
+			for (File file : files) {
+				i++;
+				System.out.println((((double)i/files.size())*100) + "%");
+				DocumentationProcessor dp = new DocumentationProcessor(file, repo, coders, out);
+			}
+			System.out.println("done");
+
+			out.println(coders);
+
+		} catch (Exception e) {
+			out.println("something went wrong");
+			e.printStackTrace();
+		}
+		out.close();
+		repo.getRepository().close();
+	}
+}
