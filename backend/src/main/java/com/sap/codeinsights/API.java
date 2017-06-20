@@ -4,8 +4,7 @@ import java.util.Map;
 
 public class API {
 	public static String processessRepository(String url) {
-		 System.out.println(url);
-		 return "Hi";
+		 return RepositoryProcessor.cloneRepository(url);
 	}
 
 	//public static String getAllRecipes(MongoDatabase database) {
