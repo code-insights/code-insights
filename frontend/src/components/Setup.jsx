@@ -19,10 +19,10 @@ export default class Setup extends React.Component {
 			url: this.state.url
 		};
 
-		fetch("http://127.0.0.1:8080/repository-processor", 
+		fetch("http://127.0.0.1:4567/repository-processor", 
 		{
 			method: "POST",
-			body: JSON.stringify(payload)
+			body: this.state.url
 		})
 		.then(function(res) {return res.json(); })
 		.then(function(data) { console.log(data.data); });
@@ -36,7 +36,7 @@ export default class Setup extends React.Component {
 					onChange={(e) => this.setState({url: e.target.value})} /> 
 
 				<RaisedButton 
-					label="Primary" 
+					label="Submit" 
 					primary={true} 
 					onTouchTap={this.sendJobToServer} />
 			</div>

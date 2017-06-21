@@ -30,9 +30,11 @@ public class Server {
 			System.exit(1);
 		}
 
-		get("/repository-processor", (req, res) -> {
+		post("/repository-processor", (req, res) -> {
 			res.header("Access-Control-Allow-Origin", "*");
-			return API.processessRepository(req.body());
+			String ret = API.processessRepository(req.body());
+			System.out.println(ret);
+			return ret;
 		});
 	}
 }

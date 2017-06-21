@@ -47,7 +47,7 @@ public class RepositoryProcessor {
 			}
 			return coders;
 		} catch (Exception e) {
-			//TODO don't suck here
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -65,6 +65,7 @@ public class RepositoryProcessor {
 			System.out.println("Repo cloned");
 			System.out.println("Getting all contributors");
 			ArrayList<Coder> coders = getCoders(repo);
+			System.out.println(coders);
 			System.out.println("Got all contributors");
 			
 			File repoDir = repo.getRepository().getDirectory().getParentFile();
