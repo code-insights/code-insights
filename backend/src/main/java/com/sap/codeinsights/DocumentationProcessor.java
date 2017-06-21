@@ -22,10 +22,11 @@ public class DocumentationProcessor extends VoidVisitorAdapter {
 	private File file;
 	private List<Coder> coders;
 	private Git repo;
-	private PrintWriter out;
 	
 	//TODO remove out
-	public DocumentationProcessor(File file, Git repo, List<Coder> coders, PrintWriter out) throws FileNotFoundException, ParseException, IOException {
+	private String out;
+
+	public DocumentationProcessor(File file, Git repo, List<Coder> coders, String out) throws FileNotFoundException, ParseException, IOException {
 		super();
 		this.file = file;
 		this.repo = repo;

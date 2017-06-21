@@ -9,6 +9,7 @@ repositories {
 dependencies {
 	compile 'com.sparkjava:spark-core:2.3'
 	compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
+	compile group: 'com.github.javaparser', name: 'javaparser-core', version: '2.2.2'
 	compile group: 'commons-io', name: 'commons-io', version: '2.4'
 
 }

@@ -2,8 +2,6 @@ package com.sap.codeinsights;
  
 import java.io.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -17,10 +15,10 @@ import com.sap.codeinsights.Coder;
 
 import org.apache.commons.io.FileUtils;
 
-public class RepositoryProcessor extends HttpServlet {
+public class RepositoryProcessor {
 
 	//TODO if file exists it don't clone it obvi
-	private Git cloneRepo(String url) {
+	private static Git cloneRepo(String url) {
 		try { 
 			File file = new File(System.getProperty("user.home") + "/code-insights/" + Math.abs((long) url.hashCode()));
 
@@ -36,7 +34,7 @@ public class RepositoryProcessor extends HttpServlet {
 	}
 
 	//returns anyone who ever committed anything to the repoistory
-	private ArrayList<Coder> getCoders(Git repo) {
+	private static ArrayList<Coder> getCoders(Git repo) {
 		ArrayList<Coder> coders = new ArrayList<Coder>();
 		try {
 			
@@ -55,18 +53,15 @@ public class RepositoryProcessor extends HttpServlet {
 	}
 
 
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		System.out.println("Cross Origin set");
+	public static String process(String url) {
 
-		PrintWriter out = response.getWriter();
+		String response = "";
 		ArrayList<String> people = new ArrayList<String>();
 
 		Git repo = null;
 		try {
 			System.out.println("Cloning repo");
-			repo = cloneRepo(request.getParameter("url"));
+			repo = cloneRepo(url);
 			System.out.println("Repo cloned");
 			System.out.println("Getting all contributors");
 			ArrayList<Coder> coders = getCoders(repo);
@@ -81,17 +76,16 @@ public class RepositoryProcessor extends HttpServlet {
 			for (File file : files) {
 				i++;
 				System.out.println((((double)i/files.size())*100) + "%");
-				DocumentationProcessor dp = new DocumentationProcessor(file, repo, coders, out);
+				DocumentationProcessor dp = new DocumentationProcessor(file, repo, coders, response);
 			}
 			System.out.println("done");
 
-			out.println(coders);
+			response += coders.toString();
 
 		} catch (Exception e) {
-			out.println("something went wrong");
 			e.printStackTrace();
 		}
-		out.close();
 		repo.getRepository().close();
+		return response;
 	}
 }
