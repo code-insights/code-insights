@@ -7,12 +7,14 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 
 import Setup from './components/Setup';
+import ResultView from './components/ResultView'
 
 class App extends React.Component {
 	render () {
 		return (
 			<MuiThemeProvider>
 				<Setup />
+				<ResultView />
 			</MuiThemeProvider>
 		);
 	}
