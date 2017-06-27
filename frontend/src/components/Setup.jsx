@@ -10,8 +10,8 @@ export default class Setup extends React.Component {
 	}
 
 	state = { 
-		jobId : "",
 		url: ""
+		data: ""
 	};
 
 	sendJobToServer = () => { 
@@ -25,7 +25,7 @@ export default class Setup extends React.Component {
 			body: this.state.url
 		})
 		.then(function(res) {return res.json(); })
-		.then(function(data) { console.log(data.data); });
+		.then(function(data) { this.setState({data: data.data });
 	};
 
 	render () {
