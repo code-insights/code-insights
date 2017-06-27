@@ -7,13 +7,24 @@ export default class Setup extends React.Component {
 	
 	constructor(props) {
 		super(props);
+
+		this.state = { 
+			url: "",
+			data: "",
+			success: false
+		};
+
+		this.sendJobToServer = this.sendJobToServer.bind(this);
+		this.updateState = this.updateState.bind(this);
 	}
 
-	state = { 
-		url: "",
-		data: "",
-		success: false
-	};
+	updateState = (data) => { 
+		this.setState({ 
+			data: data.toString(),
+			success: true
+		});
+	}
+
 
 	sendJobToServer = () => { 
 		var payload = {
@@ -26,12 +37,7 @@ export default class Setup extends React.Component {
 			body: this.state.url
 		})
 		.then(function(res) {return res.json(); })
-		.then(function(data) { 
-			this.setState({ 
-				data: data.data,
-				success: true
-			});
-		});
+		.then(this.updateState);
 	};
 
 	render () {
