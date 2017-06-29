@@ -43,7 +43,9 @@ export default class Setup extends React.Component {
 	render () {
 		let table = null;
 		if (this.state.success) {
-			table = <div> {this.state.data} </div>;
+			table = 
+				<Table>
+				<Table>;
 		} else {
 			table = <div></div>;
 		}
