@@ -3,6 +3,15 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
+import {
+	Table,
+	TableBody,
+	TableHeader,
+	TableHeaderColumn,
+	TableRow,
+	TableRowColumn,
+} from 'material-ui/Table';
+
 export default class Setup extends React.Component {
 	
 	constructor(props) {
@@ -20,7 +29,7 @@ export default class Setup extends React.Component {
 
 	updateState = (data) => { 
 		this.setState({ 
-			data: data.toString(),
+			data: data,
 			success: true
 		});
 	}
@@ -39,15 +48,36 @@ export default class Setup extends React.Component {
 		.then(function(res) {return res.json(); })
 		.then(this.updateState);
 	};
-
-	render () {
+	
+	render() {
 		let table = null;
 		if (this.state.success) {
-			table = 
-				<Table>
-				<Table>;
+			table = (
+			  <Table>
+				<TableHeader>
+				  <TableRow>
+					<TableHeaderColumn>Name</TableHeaderColumn>
+					<TableHeaderColumn>Email</TableHeaderColumn>
+					<TableHeaderColumn>Methods Contributed</TableHeaderColumn>
+					<TableHeaderColumn>Methods Documented</TableHeaderColumn>
+					<TableHeaderColumn>Methods Not Documented</TableHeaderColumn>
+				  </TableRow>
+				</TableHeader>
+				<TableBody>
+					{this.state.data.map((datum) => (
+						<TableRow>
+							<TableRowColumn>{datum.name}</TableRowColumn>
+							<TableRowColumn>{datum.email}</TableRowColumn>
+							<TableRowColumn>{datum.methodsContributed}</TableRowColumn>
+							<TableRowColumn>{datum.documentedMethods}</TableRowColumn>
+							<TableRowColumn>{datum.undocumentedMethods}</TableRowColumn>
+						</TableRow>
+					))}
+				</TableBody>
+			  </Table>
+			);
 		} else {
-			table = <div></div>;
+			table = (<div></div>);
 		}
 
 		return (
