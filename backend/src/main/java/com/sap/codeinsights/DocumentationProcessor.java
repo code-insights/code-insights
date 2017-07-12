@@ -23,16 +23,11 @@ public class DocumentationProcessor extends VoidVisitorAdapter {
 	private List<Coder> coders;
 	private Git repo;
 	
-	//TODO remove out
-	private String out;
-
-	public DocumentationProcessor(File file, Git repo, List<Coder> coders, String out) throws FileNotFoundException, ParseException, IOException {
+	public DocumentationProcessor(File file, Git repo, List<Coder> coders) throws FileNotFoundException, ParseException, IOException {
 		super();
 		this.file = file;
 		this.repo = repo;
 		this.coders = coders;
-		//TODO remove out
-		this.out = out;
 
 		FileInputStream inputStream = new FileInputStream(file);
 		this.visit(JavaParser.parse(inputStream), null);
